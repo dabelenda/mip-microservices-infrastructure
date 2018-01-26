@@ -4,6 +4,8 @@
 
 - include: cleanup.yml
 
+- include: firewall.yml
+
 - include: base-system.yml
 
 - include: control-box.yml
