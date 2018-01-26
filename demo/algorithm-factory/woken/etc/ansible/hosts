@@ -23,6 +23,21 @@ mesos-leader
 mesos-mixed
 mesos-follower
 
+[firewall:children]
+zookeeper
+mesos-leader
+mesos-mixed
+mesos-follower
+research-db
+meta-db
+woken-db
+woken
+woken-validation
+portal-db
+portal-backend
+portal-frontend
+#hospital-db
+
 # Install Zookeeper, required by Mesos
 [zookeeper]
 demo

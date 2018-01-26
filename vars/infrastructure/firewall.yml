@@ -1,0 +1,27 @@
+firewall_internal_ports: "{%- set tmp_ports = data_factory_ports_internal +
+            hostpital_database_ports_internal +
+            infrastructure_ports_internal +
+            reference_ports_internal +
+            web_analytics_ports_internal -%}
+{%- set ports = []  -%}
+{%- for port in tmp_ports -%}
+{%-   set ports = ports.append(port|string) -%}
+{%- endfor -%}
+{{- ports -}}
+"
+
+firewall_host_ips: "
+{%- set ips = [] -%}
+{%- for host in groups['firewall'] -%}
+{%-   set ips = ips.append(hostvars[host]['ansible_default_ipv4']['address']) -%}
+{%- endfor -%}
+{{- ips -}}
+"
+
+firewall_public_ports: "{{
+  data_factory_ports_public +
+  hostpital_database_ports_public +
+  infrastructure_ports_public +
+  reference_ports_public +
+  web_analytics_ports_public
+}}"
