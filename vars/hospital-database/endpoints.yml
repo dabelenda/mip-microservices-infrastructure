@@ -21,3 +21,15 @@ ldsm_db_data_dir: "/srv/docker/ldsmdb/data"
 ldsm_db_raw_data_dir: "{{ ldsm_db_raw_data_dir_override | default('/data/ldsm') }}"
 
 postgresraw_ui_admin_port: 31555
+
+hostpital_database_ports_internal: "
+  {%- set ports = [] -%}
+  {%- if ldsm_db_port is defined and ldsm_db_port -%}
+    {%- set ports = ports + [ldsm_db_port] -%}
+  {%- endif -%}
+  {%- if postgresraw_ui_admin_port is defined and postgresraw_ui_admin_port -%}
+    {%- set ports = ports + [postgresraw_ui_admin_port] -%}
+  {%- endif -%}
+  {{ ports }}
+"
+hostpital_database_ports_public: []

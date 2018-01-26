@@ -1,0 +1,10 @@
+- name: "set facts for firewall port+host"
+  set_fact:
+    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item[1] + ' -s ' + item[0] + ' -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item[1] + ' -i docker0 -j ACCEPT' ] }}"
+  with_cartesian:
+    - "{{ ips }}"
+    - "{{ ports }}"
+
+#- name: "debug"
+#  debug:
+#    msg: "{{ firewall_rules }}"

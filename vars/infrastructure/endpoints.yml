@@ -1,6 +1,8 @@
 ---
 
 zookeeper_port: 2181
+ssh_port: 22
+
 mesos_zk_port: "{{ zookeeper_port }}"
 mesos_zk_hosts: "{% for host in groups[zookeeper_server_group] %}{{ hostvars[host]['fqdn'] | default(hostvars[host]['ansible_fqdn']) }}:{{ mesos_zk_port }}{% if not loop.last %},{% endif %}{% endfor %}"
 mesos_leader_port: 5050
@@ -22,3 +24,34 @@ marathon_hostname: "{{ marathon_hostname_override | default(mesos_leader_hostnam
 
 internal_mesos_url: "http://{{ mesos_leader_hostname }}:{{ mesos_leader_port }}"
 internal_marathon_url: "http://{{ marathon_hostname }}:{{ marathon_port }}"
+
+infrastructure_ports_internal: "
+  {%- set ports = [] -%}
+  {%- if zookeeper_port is defined and zookeeper_port -%}
+    {%- set ports = ports + [zookeeper_port] -%}
+  {%- endif -%}
+  {%- if mesos_zk_port is defined and mesos_zk_port -%}
+    {%- set ports = ports + [mesos_zk_port] -%}
+  {%- endif -%}
+  {%- if mesos_leader_port is defined and mesos_leader_port -%}
+    {%- set ports = ports + [mesos_leader_port] -%}
+  {%- endif -%}
+  {%- if mesos_follower_port is defined and mesos_follower_port -%}
+    {%- set ports = ports + [mesos_follower_port] -%}
+  {%- endif -%}
+  {%- if marathon_port is defined and marathon_port -%}
+    {%- set ports = ports + [marathon_port] -%}
+  {%- endif -%}
+  {%- if ssh_port is defined and ssh_port -%}
+    {%- set ports = ports + [ssh_port] -%}
+  {%- endif -%}
+  {{ ports }}
+"
+
+infrastructure_ports_public: "
+  {%- set ports = [] -%}
+  {%- if ssh_port is defined and ssh_port -%}
+    {%- set ports = ports + [ssh_port] -%}
+  {%- endif -%}
+  {{ ports }}
+"
