@@ -17,6 +17,21 @@ mesos-leader
 mesos-mixed
 mesos-follower
 
+[firewall:children]
+zookeeper
+mesos-leader
+mesos-mixed
+mesos-follower
+research-db
+meta-db
+woken-db
+woken
+woken-validation
+portal-db
+portal-backend
+portal-frontend
+hospital-database
+
 # Managed hosts should contain all servers in the datacenter.
 # Common software, configuration and security settings will be applied on them.
 [managed]
