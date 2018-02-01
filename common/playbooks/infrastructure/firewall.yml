@@ -20,7 +20,9 @@
     - role: firewall_setfacts
       vars:
         - ips: "{{ firewall_host_ips }}"
-        - ports: "{{ firewall_internal_ports }}"
+        - internal_ports: "{{ firewall_internal_ports }}"
+        - public_ports: "{{ firewall_public_ports }}"
+        - swarm_ports: "{{ infrastructure_swarm_ports }}"
       when: manage_firewall | default(true)
       tags: ['infra', 'infrastructure', 'runtimes', 'firewall']
     - role: firewall
