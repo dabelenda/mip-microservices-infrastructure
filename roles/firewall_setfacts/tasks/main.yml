@@ -1,22 +1,16 @@
 - name: "set facts for firewall (internal services) port+host"
   set_fact:
-    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item[1] + ' -s ' + item[0] + ' -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item[1] + ' -i docker0 -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item[1] + ' -s ' + item[0] + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item[1] + ' -i docker0 -j ACCEPT' ] }}"
+    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item[1]|string + ' -s ' + item[0]|string + ' -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item[1]|string + ' -i docker0 -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item[1]|string + ' -s ' + item[0]|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item[1]|string + ' -i docker0 -j ACCEPT' ] }}"
   with_cartesian:
     - "{{ ips }}"
-    - "{{ internal_ports }}"
-
-- name: "set facts for firewall (public services) port"
-  set_fact:
-    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item + ' -j ACCEPT' ] }}"
-  with_items:
-    - "{{ public_ports }}"
+    - "{{ ports }}"
 
 - name: "set facts for firewall (swarm clustering) port"
   set_fact:
-    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item + ' -j ACCEPT' ] }}"
+    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -j ACCEPT' ] }}"
   with_items:
     - "{{ swarm_ports }}"
-  when: swarm_firewall_enabled | bool | default(False)
+  when: swarm_firewall_enabled | bool
 
 #- name: "debug"
 #  debug:
