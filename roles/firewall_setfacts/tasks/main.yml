@@ -1,16 +1,32 @@
-- name: "set facts for firewall (internal services) port+host"
+- name: "Install ipset package"
+  package:
+    name: ipset
+    state: installed
+
+- name: "create ipset fact for containing all members of the cluster"
   set_fact:
-    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item[1]|string + ' -s ' + item[0]|string + ' -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item[1]|string + ' -i docker0 -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item[1]|string + ' -s ' + item[0]|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item[1]|string + ' -i docker0 -j ACCEPT' ] }}"
-  with_cartesian:
+    firewall_rules: "{{ firewall_rules|default(['iptables -N DOCKER-USER', 'ipset destroy clustermembers', 'ipset create clustermembers hash:ip hashsize 4096']) + ['ipset add clustermembers ' + item] }}"
+  with_items:
     - "{{ ips }}"
+
+- name: "set facts for firewall (internal services) port"
+  set_fact:
+    firewall_rules: "{{ firewall_rules + [ 'iptables -A INPUT -p tcp --dport ' + item|string + ' -m set --match-set clustermembers src -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item|string + ' -i docker0 -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -m set --match-set clustermembers src -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -i docker0 -j ACCEPT' ] }}"
+  with_items:
     - "{{ ports }}"
 
 - name: "set facts for firewall (swarm clustering) port"
   set_fact:
-    firewall_rules: "{{ firewall_rules|default([]) + [ 'iptables -A INPUT -p tcp --dport ' + item|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -j ACCEPT' ] }}"
+    firewall_rules: "{{ firewall_rules + [ 'iptables -I INPUT -p tcp --dport ' + item|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -j ACCEPT' ] }}"
   with_items:
     - "{{ swarm_ports }}"
   when: swarm_firewall_enabled | bool
+
+- name: "do not accept connections from hosts not member of the cluster"
+  set_fact:
+    firewall_rules: "{{ firewall_rules + ['iptables -I DOCKER-USER -p tcp -m set ! --match-set clustermembers src --dport ' + item + ' -j DROP' ] }}"
+  with_items:
+    - "{{ docker_ports }}"
 
 #- name: "debug"
 #  debug:
