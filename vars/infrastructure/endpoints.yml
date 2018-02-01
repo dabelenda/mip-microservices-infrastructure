@@ -44,9 +44,6 @@ infrastructure_ports_internal: "
   {%- if marathon_port is defined and marathon_port -%}
     {%- set ports = ports + [marathon_port] -%}
   {%- endif -%}
-  {%- if ssh_port is defined and ssh_port -%}
-    {%- set ports = ports + [ssh_port] -%}
-  {%- endif -%}
   {{ ports }}
 "
 
