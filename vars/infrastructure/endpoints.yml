@@ -55,3 +55,6 @@ infrastructure_ports_public: "
   {%- endif -%}
   {{ ports }}
 "
+
+infrastructure_swarm_ports:
+  - 333
