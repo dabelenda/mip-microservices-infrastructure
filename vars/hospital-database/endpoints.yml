@@ -27,9 +27,7 @@ hostpital_database_ports_internal: "
   {%- if ldsm_db_port is defined and ldsm_db_port -%}
     {%- set ports = ports + [ldsm_db_port] -%}
   {%- endif -%}
-  {%- if postgresraw_ui_admin_port is defined and postgresraw_ui_admin_port -%}
-    {%- set ports = ports + [postgresraw_ui_admin_port] -%}
-  {%- endif -%}
+  {%- set ports = ports + [5555] -%}{#- the docker container port for: postgresraw_ui_admin_port -#}
   {{ ports }}
 "
 hostpital_database_ports_public: []

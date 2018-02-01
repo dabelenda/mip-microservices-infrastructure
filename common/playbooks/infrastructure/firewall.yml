@@ -22,6 +22,8 @@
         - ips: "{{ firewall_host_ips }}"
         - ports: "{{ firewall_internal_ports }}"
         - swarm_ports: "{{ infrastructure_swarm_ports }}"
+        - swarm_firewall_enabled: "{{ firewall_swarm_enabled | default(false) }}"
+        - docker_ports: "{{ firewall_container_exposed_ports }}"
       when: manage_firewall | default(true)
       tags: ['infra', 'infrastructure', 'runtimes', 'firewall']
     - role: firewall

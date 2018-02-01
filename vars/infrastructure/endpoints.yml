@@ -45,8 +45,11 @@ infrastructure_ports_internal: "
   {{ ports }}
 "
 
+# ports 80 and 443 are set here for every machine
 infrastructure_ports_public: "
   {%- set ports = [] -%}
+  {%- set ports = ports + ['80'] -%}
+  {%- set ports = ports + ['443'] -%}
   {%- if ssh_port is defined and ssh_port -%}
     {%- set ports = ports + [ssh_port] -%}
   {%- endif -%}
