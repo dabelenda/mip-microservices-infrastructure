@@ -13,6 +13,10 @@ management
 [control]
 management
 
+[firewall:children]
+zookeeper
+mesos-mixed
+
 # Install Zookeeper, required by Mesos
 [zookeeper]
 management
