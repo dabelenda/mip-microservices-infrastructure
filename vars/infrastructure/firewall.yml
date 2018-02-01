@@ -25,3 +25,24 @@ firewall_public_ports: "{{
   reference_ports_public +
   web_analytics_ports_public
 }}"
+
+firewall_container_exposed_ports: "
+  {%- set ports = [] -%}
+  {%- set ports = ports + [ '5432' ] -%}{#- airflow-database + data-catalog-database + dev-services-database + i2b2-capture-database + i2b2-mip-database + ldsm-database + meta-database + mipmap-database + portal-database + research-database + woken-database -#}
+  {%- set ports = ports + [ '22' ] -%}{#- cbrain-bourreau + cbrain-data-provider + gitlab -#}
+  {%- set ports = ports + [ '3306' ] -%}{#- cbrain-database -#}
+  {%- set ports = ports + [ '3000' ] -%}{#- cbrain-portal -#}
+  {%- set ports = ports + [ '5000' ] -%}{#- docker-registry + mesos-ui -#}
+  {%- set ports = ports + [ '80' ] -%}{#- gitlab -#}
+  {%- set ports = ports + [ '8080' ] -%}{#- portal-backend -#}
+  {%- set ports = ports + [ '4089' ] -%}{#- portal-backend -#}
+  {%- set ports = ports + [ '5555' ] -%}{#- postgresraw-ui -#}
+  {%- set ports = ports + [ '9000' ] -%}{#- sonarqube -#}
+  {%- if woken_validation_akka_port is defined -%}
+  {%-   set ports = ports + [ woken_validation_akka_port ] -%}{#- woken-validation -#}
+  {%- endif -%}
+  {%- set ports = ports + [ '8087' ] -%}{#- woken -#}
+  {%- if woken_akka_port is defined -%}
+  {%-   set ports = ports + [ woken_akka_port ] -%}{#- woken -#}
+  {%- endif -%}
+{{- ports -}}"
