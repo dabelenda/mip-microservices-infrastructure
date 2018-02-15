@@ -81,9 +81,14 @@
       CADDY_ENTRY0_PROXY4_WEBSOCKET: yes
       CADDY_ENTRY0_PROXY4_TRANSPARENT: 'yes'
 
-      CADDY_ENTRY0_PROXY5_PATH: /
+      CADDY_ENTRY0_PROXY5_PATH: /postgresraw-ui
       CADDY_ENTRY0_PROXY5_DEST: '{{ reverse_proxy_portal_frontend_backend }}'
+      CADDY_ENTRY0_PROXY5_WITHOUT: /postgresraw-ui
       CADDY_ENTRY0_PROXY5_TRANSPARENT: 'yes'
+
+      CADDY_ENTRY0_PROXY6_PATH: /
+      CADDY_ENTRY0_PROXY6_DEST: '{{ reverse_proxy_portal_frontend_backend }}'
+      CADDY_ENTRY0_PROXY6_TRANSPARENT: 'yes'
 
       CADDY_ENTRY1_HOSTNAME: 'http://{{ reverse_proxy_public_hostname }}'
       CADDY_ENTRY1_TLS_MODE: 'off'
