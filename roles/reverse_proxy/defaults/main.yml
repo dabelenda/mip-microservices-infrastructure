@@ -34,3 +34,6 @@ reverse_proxy_portal_frontend_backend: "http://{{ portal_frontend_marathon_host 
 #
 # portal_backend has an authentication integrated
 reverse_proxy_portal_backend_backend: "http://{{ portal_backend_marathon_host }}:{{ portal_backend_port }}"
+
+# postgresraw-ui has authentication
+reverse_proxy_postgresraw_ui_backend: "http://{{ postgresraw_ui_marathon_host }}:{{ postgresraw_ui_admin_port }}"

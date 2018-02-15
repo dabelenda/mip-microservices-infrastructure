@@ -15,6 +15,8 @@
     - "{{ play_dir }}/vars/web-analytics/endpoints.yml"
     - "{{ play_dir }}/vars/web-analytics/portal-frontend.yml"
     - "{{ play_dir }}/vars/web-analytics/portal-backend.yml"
+    - "{{ play_dir }}/vars/hospital-database/postgresraw-ui.yml"
+    - "{{ play_dir }}/vars/hospital-database/endpoints.yml"
 
   roles:
 
