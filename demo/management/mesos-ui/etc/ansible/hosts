@@ -1,9 +1,6 @@
+# All machines known to Ansible
+[all]
 management ansible_ssh_host=127.0.0.1 ansible_ssh_port=2222 ansible_ssh_user='vagrant' ansible_ssh_private_key_file='.vagrant/machines/default/virtualbox/private_key'
-
-# Managed hosts should contain all servers in the datacenter.
-# Common software, configuration and security settings will be applied on them.
-[managed]
-management
 
 # Control node: one control node should be selected, not necessarily in the datacenter - it can be the local desktop -
 # but it should satisfy the following requirements:
@@ -13,10 +10,31 @@ management
 [control]
 management
 
+# Infrastructure building block: define an 'infrastructure' group encompassing the configuration of the groups defined below
+[infrastructure:children]
+managed
+zookeeper
+mesos-leader
+mesos-mixed
+mesos-follower
+
+# Managed hosts should contain all servers in the datacenter.
+# Common software, configuration and security settings will be applied on them.
+[managed]
+management
+
 # Install Zookeeper, required by Mesos
 [zookeeper]
 management
 
+# Install Mesos leader and Marathon
+[mesos-leader]
+# none
+
 # Install the full Mesos stack, including Mesos master and agent, Docker and Marathon
 [mesos-mixed]
 management
+
+# Install Mesos agent and Docker
+[mesos-follower]
+# none

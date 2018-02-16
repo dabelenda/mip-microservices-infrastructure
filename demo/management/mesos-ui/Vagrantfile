@@ -18,17 +18,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  # TODO: wait for fix from Canonical https://bugs.launchpad.net/cloud-images/+bug/1565985
-  # config.vm.box = "ubuntu/xenial64"
-  # config.vm.box = "gbarbieru/xenial"
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
 
   if Vagrant.has_plugin? 'vagrant-hostmanager'
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
     config.hostmanager.aliases = []
-  else
-    fail_with_message "vagrant-hostmanager missing, please install the plugin with this command:\nvagrant plugin install vagrant-hostmanager"
   end
 
   # Disable automatic box update checking. If you disable this, then
@@ -50,6 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # using a specific IP.
     management.vm.network :private_network, ip: '192.168.51.66'
 
+    # Shared folders
     management.vm.synced_folder "../../../roles", "/etc/ansible/roles", create: true
 
   end
@@ -75,20 +71,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Mapping ansible roles with their git repositories messes with etckeeper
   config.vm.provision "shell", inline: "mkdir -p /etc/ansible && [ -f /etc/ansible/.gitignore ] || echo 'roles/' > /etc/ansible/.gitignore"
   # Xenial ships only with Python 3
-  config.vm.provision "shell", inline: "apt-get install -y python2.7 python-simplejson"
+  config.vm.provision "shell", inline: "apt-get update && apt-get install -y curl python2.7 python-simplejson python-setuptools python-psycopg2 python-pip && pip2 install jmespath==0.9.3"
 
   # Run provisioning with ansible
   config.vm.provision "ansible" do |ansible|
       ansible.playbook = "../install.yml"
       ansible.inventory_path = "etc/ansible/hosts"
       ansible.limit = 'all'
-      ansible.verbose = "vvvv"
+      ansible.verbose = "v"
       ansible.raw_ssh_args = ['-o ForwardAgent=yes']
-      ansible.tags = "mesos-ui"
+      ansible.skip_tags = ['matlab']
       # Use this to override ansible playbook variables
       ansible.extra_vars = {
         play_dir: Dir.pwd + '/../../..',
-        datacenter: 'federation'
+        lib_roles_path: Dir.pwd + '/../../../roles',
+        datacenter: 'federation',
+        vagrant_box_ip_address: '192.168.51.66',
+        in_vagrant: true
       }
   end
 
