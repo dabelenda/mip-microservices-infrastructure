@@ -23,6 +23,11 @@ mesos-leader
 mesos-mixed
 mesos-follower
 
+# Managed hosts should contain all servers in the datacenter.
+# Common software, configuration and security settings will be applied on them.
+[managed]
+demo
+
 # Install Zookeeper, required by Mesos
 [zookeeper]
 demo
@@ -59,12 +64,12 @@ woken-db
 woken
 woken-validation
 
-# Install Chronos
-[chronos]
-demo
-
 # Install woken-database
 [woken-db]
+demo
+
+# Install chronos
+[chronos]
 demo
 
 # Install woken
