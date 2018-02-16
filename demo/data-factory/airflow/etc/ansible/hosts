@@ -43,6 +43,10 @@ airflow-master
 airflow-agent
 df-bases
 
+# Install research-database
+[research-db]
+demo
+
 # Install the databases for Data Factory
 [df-bases]
 demo
