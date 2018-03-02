@@ -3,6 +3,10 @@
   vars:
     uri: "{{ internal_marathon_url }}"
 
+- name: Create reverse_proxy certificate directory
+  file: state=directory path={{ reverse_proxy_certificate_dir }}
+  become: True
+
 - name: Remove old Reverse-Proxy using Marathon
   marathon_app:
     uri: "{{ internal_marathon_url }}"
@@ -30,7 +34,10 @@
         protocol: 'tcp'
         name: 'https'
     docker_parameters: '{{ reverse_proxy_docker_parameters }}'
-    container_volumes: []
+    container_volumes:
+      - containerPath: "/root/.caddy"
+        hostPath: "{{ reverse_proxy_certificate_dir }}"
+        mode: RW
     env:
       CADDY_GENERATE_CONFIG: 'yes'
       CADDY_ENTRY0_HOSTNAME: 'https://{{ reverse_proxy_public_hostname }}'
