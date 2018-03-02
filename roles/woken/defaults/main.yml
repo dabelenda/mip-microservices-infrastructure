@@ -1,7 +1,7 @@
 ---
 
 # Version of the Docker image for woken to use
-woken_version: latest
+woken_version: test
 
 # Id of woken in Marathon
 woken_marathon_id: /algorithm-factory/woken
@@ -31,7 +31,7 @@ woken_docker_network: BRIDGE
 woken_docker_bridge_network: ''
 # Additional parameters for Docker
 woken_docker_parameters: []
-woken_docker_image_basename: hbpmip/woken
+woken_docker_image_basename: dabelenda/woken
 woken_docker_image: "{{ woken_docker_image_basename }}:{{ woken_version }}"
 
 # Attach the woken application to a particular host. The hostname should be the name known by Marathon / Mesos
