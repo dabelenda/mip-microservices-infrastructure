@@ -32,6 +32,7 @@
     docker_parameters: '{{ reverse_proxy_docker_parameters }}'
     container_volumes: []
     env:
+      CADDY_GENERATE_CONFIG: 'yes'
       CADDY_ENTRY0_HOSTNAME: 'https://{{ reverse_proxy_public_hostname }}'
       CADDY_ENTRY0_TLS_MODE: '{{ reverse_proxy_ssl_mode }}'
 
