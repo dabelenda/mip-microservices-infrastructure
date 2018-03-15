@@ -24,8 +24,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.hostmanager.enabled = true
     config.hostmanager.manage_host = true
     config.hostmanager.aliases = []
-  else
-    fail_with_message "vagrant-hostmanager missing, please install the plugin with this command:\nvagrant plugin install vagrant-hostmanager"
   end
 
   # Disable automatic box update checking. If you disable this, then
@@ -51,25 +49,24 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     demo.vm.network :private_network, ip: '192.168.83.73'
 
     # Shared folders
-    demo.vm.synced_folder "../../roles", "/etc/ansible/roles", create: true
+    demo.vm.synced_folder "../../../roles", "/etc/ansible/roles", create: true
 
   end
 
-    # Provider-specific configuration so you can fine-tune various
-    # backing providers for Vagrant. These expose provider-specific options.
-    # Example for VirtualBox:
-    #
-    config.vm.provider "virtualbox" do |vb|
-      vb.name = "web-algos-ubuntu"
-
-      # Use VBoxManage to customize the VM. For example to change memory:
-      vb.customize ["modifyvm", :id, "--memory", "7120", "--cpus", "3", "--ioapic", "on"]
-      vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
-      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
-    end
-    #
-    # View the documentation for the provider you're using for more
-    # information on available options.
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "web-algos-ubuntu"
+    # Use VBoxManage to customize the VM. For example to change memory:
+    vb.customize ["modifyvm", :id, "--memory", "8192", "--cpus", "3", "--ioapic", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "off"]
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "off"]
+  end
+  #
+  # View the documentation for the provider you're using for more
+  # information on available options.
 
   ansible_inventory_dir = "envs/vagrant/etc/ansible"
 
@@ -81,7 +78,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Run provisioning with ansible
   config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "install.yml"
+      ansible.playbook = "../install.yml"
       ansible.inventory_path = "etc/ansible/hosts"
       ansible.limit = 'all'
       ansible.verbose = "v"
@@ -89,9 +86,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       ansible.skip_tags = ['matlab']
       # Use this to override ansible playbook variables
       ansible.extra_vars = {
-        play_dir: Dir.pwd + '/../..',
-        lib_roles_path: Dir.pwd + '/../../roles',
+        play_dir: Dir.pwd + '/../../..',
+        lib_roles_path: Dir.pwd + '/../../../roles',
+        datacenter: 'federation',
+        vagrant_box_ip_address: '192.168.83.73',
         in_vagrant: true
       }
   end
+
 end
