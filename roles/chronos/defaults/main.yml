@@ -40,3 +40,4 @@ chronos_cluster_name: '{{ mesos_cluster }}'
 chronos_cpus: 0.5
 chronos_mem: 512.0
 chronos_docker_parameters: []
+chronos_jvm_opts: '-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap'

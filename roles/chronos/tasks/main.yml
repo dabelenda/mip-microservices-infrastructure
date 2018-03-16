@@ -35,6 +35,7 @@
       PORT0: "{{ chronos_http_port }}"
       PORT1: "{{ chronos_libprocess_port }}"
       LIBPROCESS_IP: "{{ chronos_ip_address }}"
+      JVM_OPTS: "{{ chronos_jvm_opts }}"
     instances: 1
     cpus: '{{ chronos_cpus }}'
     mem: '{{ chronos_mem }}'
