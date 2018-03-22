@@ -14,18 +14,45 @@
     - "{{ play_dir }}/vars/web-analytics/endpoints.yml"
     - "{{ play_dir }}/vars/infrastructure/firewall.yml"
 
+  pre_tasks:
+
+    - name: "Install ipset package"
+      package:
+        name: ipset
+        state: installed
+    
+    - name: "create ipset fact for containing all members of the cluster"
+      set_fact:
+        firewall_rules: "{{ firewall_rules|default(['iptables -N DOCKER-USER', 'ipset destroy clustermembers', 'ipset create clustermembers hash:ip hashsize 4096']) + ['ipset add clustermembers ' + item] }}"
+      with_items:
+        - "{{ firewall_host_ips | default([]) }}"
+    
+    - name: "set facts for firewall (internal services) port"
+      set_fact:
+        firewall_rules: "{{ firewall_rules + [ 'iptables -A INPUT -p tcp --dport ' + item|string + ' -m set --match-set clustermembers src -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item|string + ' -i docker0 -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -m set --match-set clustermembers src -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -i docker0 -j ACCEPT' ] }}"
+      with_items:
+        - "{{ firewall_internal_ports | default([]) }}"
+    
+    - name: "set facts for firewall (swarm clustering) port"
+      set_fact:
+        firewall_rules: "{{ firewall_rules + [ 'iptables -I INPUT -p tcp --dport ' + item|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -j ACCEPT' ] }}"
+      with_items:
+        - "{{ infrastructure_swarm_ports | default([]) }}"
+      when: firewall_swarm_enabled | bool | default(false)
+    
+    - name: "do not accept connections from hosts not member of the cluster"
+      set_fact:
+        firewall_rules: "{{ firewall_rules + ['iptables -I DOCKER-USER -p tcp -m set ! --match-set clustermembers src --dport ' + item + ' -j DROP' ] }}"
+      with_items:
+        - "{{ firewall_container_exposed_ports | default([]) }}"
+    
+    #- name: "debug"
+    #  debug:
+    #    msg: "{{ firewall_rules }}"
+    
   roles:
 
     # setup firewall
-    - role: firewall_setfacts
-      vars:
-        - ips: "{{ firewall_host_ips }}"
-        - ports: "{{ firewall_internal_ports }}"
-        - swarm_ports: "{{ infrastructure_swarm_ports }}"
-        - swarm_firewall_enabled: "{{ firewall_swarm_enabled | default(false) }}"
-        - docker_ports: "{{ firewall_container_exposed_ports }}"
-      when: manage_firewall | default(true)
-      tags: ['infra', 'infrastructure', 'runtimes', 'firewall']
     - role: firewall
       vars:
         firewall_state: started
