@@ -38,7 +38,7 @@
         firewall_rules: "{{ firewall_rules + [ 'iptables -I INPUT -p tcp --dport ' + item|string + ' -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -j ACCEPT' ] }}"
       with_items:
         - "{{ infrastructure_swarm_ports | default([]) }}"
-      when: firewall_swarm_enabled | bool | default(false)
+      when: firewall_swarm_enabled | default(false) | bool
     
     - name: "do not accept connections from hosts not member of the cluster"
       set_fact:
