@@ -5,7 +5,7 @@ firewall_internal_ports: "{%- set tmp_ports = data_factory_ports_internal +
             web_analytics_ports_internal -%}
 {%- set ports = []  -%}
 {%- for port in tmp_ports -%}
-{%-   set ports = ports.append(port|string) -%}
+{%-   set ports = ports + [port|string] -%}
 {%- endfor -%}
 {{- ports -}}
 "
