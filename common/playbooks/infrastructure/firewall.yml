@@ -20,30 +20,22 @@
       package:
         name: ipset
         state: installed
-    
+
     - name: "create ipset fact for containing all members of the cluster"
       set_fact:
         firewall_rules: "{{ firewall_rules|default(['iptables -N DOCKER-USER', 'ipset destroy clustermembers', 'ipset create clustermembers hash:ip hashsize 4096']) + ['ipset add clustermembers ' + item|string] }}"
       with_items:
         - "{{ firewall_host_ips }}"
-    
-    - name: "debug"
-      debug:
-        msg: "{{ firewall_rules }}"
-    
+
     - name: "set facts for firewall (internal services) port"
       set_fact:
         firewall_rules: "{{ firewall_rules + [ 'iptables -A INPUT -p tcp --dport ' + item|string + ' -m set --match-set clustermembers src -j ACCEPT', 'iptables -A INPUT -p tcp --dport ' + item|string + ' -i docker0 -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -m set --match-set clustermembers src -j ACCEPT', 'iptables -A INPUT -p udp --dport ' + item|string + ' -i docker0 -j ACCEPT' ] }}"
       with_items:
-        - "{{ firewall_internal_ports }}"
-    
-    - name: "debug"
-      debug:
-        msg: "{{ firewall_rules }}"
-    
-    - name: "debug"
-      fail:
-        msg: "fail for debugging"
+        - "{{ data_factory_ports_internal +
+            hostpital_database_ports_internal +
+            infrastructure_ports_internal +
+            reference_ports_internal +
+            web_analytics_ports_internal }}"
 
     - name: "set facts for firewall (swarm clustering) port"
       set_fact:
@@ -51,13 +43,17 @@
       with_items:
         - "{{ infrastructure_swarm_ports }}"
       when: firewall_swarm_enabled | default(false) | bool
-    
+
     - name: "do not accept connections from hosts not member of the cluster"
       set_fact:
         firewall_rules: "{{ firewall_rules + ['iptables -I DOCKER-USER -p tcp -m set ! --match-set clustermembers src --dport ' + item|string + ' -j DROP' ] }}"
       with_items:
         - "{{ firewall_container_exposed_ports }}"
-    
+
+#    - name: "debug"
+#      debug:
+#        msg: "{{ firewall_rules }}"
+
   roles:
 
     # setup firewall
