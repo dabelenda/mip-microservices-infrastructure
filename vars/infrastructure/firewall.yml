@@ -1,15 +1,3 @@
-firewall_internal_ports: "{%- set tmp_ports = data_factory_ports_internal +
-            hostpital_database_ports_internal +
-            infrastructure_ports_internal +
-            reference_ports_internal +
-            web_analytics_ports_internal -%}
-{%- set int_ports = []  -%}
-{%- for port in tmp_ports -%}
-{%-   set int_ports = int_ports + [port|string] -%}
-{%- endfor -%}
-{{- int_ports -}}
-"
-
 firewall_host_ips: "
 {%- set ips = [] -%}
 {%- for host in groups['firewall'] -%}
