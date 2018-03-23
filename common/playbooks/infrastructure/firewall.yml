@@ -33,6 +33,7 @@
       with_items:
         - "{{ data_factory_ports_internal +
             hostpital_database_ports_internal +
+            algorithm_factory_ports_internal +
             infrastructure_ports_internal +
             reference_ports_internal +
             web_analytics_ports_internal }}"
