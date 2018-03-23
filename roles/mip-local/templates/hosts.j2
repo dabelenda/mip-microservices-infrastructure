@@ -34,6 +34,10 @@ mesos-mixed
 mesos-follower
 reverse-proxy
 
+# Nodes that will be processed for firewalling
+[firewall:children]
+managed
+
 # Install Zookeeper, required by Mesos
 [zookeeper]
 {{ target_server }}
