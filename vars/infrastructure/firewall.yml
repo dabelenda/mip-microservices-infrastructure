@@ -3,11 +3,11 @@ firewall_internal_ports: "{%- set tmp_ports = data_factory_ports_internal +
             infrastructure_ports_internal +
             reference_ports_internal +
             web_analytics_ports_internal -%}
-{%- set ports = []  -%}
+{%- set int_ports = []  -%}
 {%- for port in tmp_ports -%}
-{%-   set ports = ports + [port|string] -%}
+{%-   set int_ports = int_ports + [port|string] -%}
 {%- endfor -%}
-{{- ports -}}
+{{- int_ports -}}
 "
 
 firewall_host_ips: "
@@ -26,23 +26,22 @@ firewall_public_ports: "{{
   web_analytics_ports_public
 }}"
 
-firewall_container_exposed_ports: "
-  {%- set ports = [] -%}
-  {%- set ports = ports + [ '5432' ] -%}{#- airflow-database + data-catalog-database + dev-services-database + i2b2-capture-database + i2b2-mip-database + ldsm-database + meta-database + mipmap-database + portal-database + research-database + woken-database -#}
-  {%- set ports = ports + [ '22' ] -%}{#- cbrain-bourreau + cbrain-data-provider + gitlab -#}
-  {%- set ports = ports + [ '3306' ] -%}{#- cbrain-database -#}
-  {%- set ports = ports + [ '3000' ] -%}{#- cbrain-portal -#}
-  {%- set ports = ports + [ '5000' ] -%}{#- docker-registry + mesos-ui -#}
-  {%- set ports = ports + [ '80' ] -%}{#- gitlab -#}
-  {%- set ports = ports + [ '8080' ] -%}{#- portal-backend -#}
-  {%- set ports = ports + [ '4089' ] -%}{#- portal-backend -#}
-  {%- set ports = ports + [ '5555' ] -%}{#- postgresraw-ui -#}
-  {%- set ports = ports + [ '9000' ] -%}{#- sonarqube -#}
+firewall_container_exposed_ports: "{%- set exp_ports = [] -%}
+  {%- set exp_ports = exp_ports + [ '5432' ] -%}{#- airflow-database + data-catalog-database + dev-services-database + i2b2-capture-database + i2b2-mip-database + ldsm-database + meta-database + mipmap-database + portal-database + research-database + woken-database -#}
+  {%- set exp_ports = exp_ports + [ '22' ] -%}{#- cbrain-bourreau + cbrain-data-provider + gitlab -#}
+  {%- set exp_ports = exp_ports + [ '3306' ] -%}{#- cbrain-database -#}
+  {%- set exp_ports = exp_ports + [ '3000' ] -%}{#- cbrain-portal -#}
+  {%- set exp_ports = exp_ports + [ '5000' ] -%}{#- docker-registry + mesos-ui -#}
+  {%- set exp_ports = exp_ports + [ '80' ] -%}{#- gitlab -#}
+  {%- set exp_ports = exp_ports + [ '8080' ] -%}{#- portal-backend -#}
+  {%- set exp_ports = exp_ports + [ '4089' ] -%}{#- portal-backend -#}
+  {%- set exp_ports = exp_ports + [ '5555' ] -%}{#- postgresraw-ui -#}
+  {%- set exp_ports = exp_ports + [ '9000' ] -%}{#- sonarqube -#}
   {%- if woken_validation_akka_port is defined -%}
-  {%-   set ports = ports + [ woken_validation_akka_port ] -%}{#- woken-validation -#}
+  {%-   set exp_ports = exp_ports + [ woken_validation_akka_port ] -%}{#- woken-validation -#}
   {%- endif -%}
-  {%- set ports = ports + [ '8087' ] -%}{#- woken -#}
+  {%- set exp_ports = exp_ports + [ '8087' ] -%}{#- woken -#}
   {%- if woken_akka_port is defined -%}
-  {%-   set ports = ports + [ woken_akka_port ] -%}{#- woken -#}
+  {%-   set exp_ports = exp_ports + [ woken_akka_port ] -%}{#- woken -#}
   {%- endif -%}
-{{- ports -}}"
+{{- exp_ports -}}"
