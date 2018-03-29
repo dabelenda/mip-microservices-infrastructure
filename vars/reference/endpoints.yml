@@ -40,15 +40,4 @@ meta_db_jdbc_url: "{{ meta_db_jdbc_url_base }}/{{ meta_db_name }}"
 meta_db_jdbc_driver: "org.postgresql.Driver"
 meta_db_jdbc_jar: "postgresql-9.4-1201.jdbc41.jar"
 
-reference_ports_internal:  "
-  {%- set ports = [] -%}
-  {%- if research_db_port is defined and research_db_port -%}
-    {%- set ports = ports + [research_db_port] -%}
-  {%- endif -%}
-  {%- if meta_db_port is defined and meta_db_port -%}
-    {%- set ports = ports + [meta_db_port] -%}
-  {%- endif -%}
-  {{ ports }}
-"
-
 reference_ports_public: []

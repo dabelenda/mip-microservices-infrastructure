@@ -76,27 +76,4 @@ woken_validation_akka_port: 31082
 # Port used to expose statistics to prometheus
 woken_prometheus_exporter_port: 31909
 
-algorithm_factory_ports_internal: "
-  {%- set ports = [] -%}
-  {%- if woken_db_port is defined and woken_db_port -%}
-    {%- set ports = ports + [woken_db_port] -%}
-  {%- endif -%}
-  {%- if woken_http_port is defined and woken_http_port -%}
-    {%- set ports = ports + [woken_http_port] -%}
-  {%- endif -%}
-  {%- if woken_akka_port is defined and woken_akka_port -%}
-    {%- set ports = ports + [woken_akka_port] -%}
-  {%- endif -%}
-  {%- if chronos_http_port is defined and chronos_http_port -%}
-    {%- set ports = ports + [chronos_http_port] -%}
-  {%- endif -%}
-  {%- if chronos_libprocess_port is defined and chronos_libprocess_port -%}
-    {%- set ports = ports + [chronos_libprocess_port] -%}
-  {%- endif -%}
-  {%- if woken_validation_akka_port is defined and woken_validation_akka_port -%}
-    {%- set ports = ports + [woken_validation_akka_port] -%}
-  {%- endif -%}
-  {{ ports }}
-"
-
 algoritm_factory_ports_public: []

@@ -27,26 +27,6 @@ internal_marathon_url: "http://{{ marathon_hostname }}:{{ marathon_port }}"
 
 metrics_prometheus_http_port: 31080
 
-infrastructure_ports_internal: "
-  {%- set ports = [] -%}
-  {%- if zookeeper_port is defined and zookeeper_port -%}
-    {%- set ports = ports + [zookeeper_port] -%}
-  {%- endif -%}
-  {%- if mesos_zk_port is defined and mesos_zk_port -%}
-    {%- set ports = ports + [mesos_zk_port] -%}
-  {%- endif -%}
-  {%- if mesos_leader_port is defined and mesos_leader_port -%}
-    {%- set ports = ports + [mesos_leader_port] -%}
-  {%- endif -%}
-  {%- if mesos_follower_port is defined and mesos_follower_port -%}
-    {%- set ports = ports + [mesos_follower_port] -%}
-  {%- endif -%}
-  {%- if marathon_port is defined and marathon_port -%}
-    {%- set ports = ports + [marathon_port] -%}
-  {%- endif -%}
-  {{ ports }}
-"
-
 # ports 80 and 443 are set here for every machine
 infrastructure_ports_public: "
   {%- set ports = [] -%}
@@ -57,8 +37,3 @@ infrastructure_ports_public: "
   {%- endif -%}
   {{ ports }}
 "
-
-infrastructure_swarm_ports:
-  - 2377
-  - 7946
-  - 4789

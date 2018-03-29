@@ -56,17 +56,4 @@ portal_backend_features_from: '{{ features_from }}'
 # Use mip_cde_features to see only research data, otherwise use mip_local_features
 portal_backend_features_table: '{{ features_table }}'
 
-web_analytics_ports_internal: "
-  {%- set ports = [] -%}
-  {%- if portal_db_port is defined and portal_db_port -%}
-    {%- set ports = ports + [portal_db_port] -%}
-  {%- endif -%}
-  {%- if portal_backend_port is defined and portal_backend_port -%}
-    {%- set ports = ports + [portal_backend_port] -%}
-  {%- endif -%}
-  {%- if portal_backend_akka_port is defined and portal_backend_akka_port -%}
-    {%- set ports = ports + [portal_backend_akka_port] -%}
-  {%- endif -%}
-  {{ ports }}
-"
 web_analytics_ports_public: []

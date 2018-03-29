@@ -102,24 +102,4 @@ data_catalog_db_sql_alchemy_conn: "postgresql://{{ data_catalog_db_user }}:{{ da
 
 mipmap_db_config_file: '/etc/mipmap/postgresdb.properties'
 
-data_factory_ports_internal: "
-  {%- set ports = [] -%}
-  {%- if airflow_db_port is defined and airflow_db_port -%}
-    {%- set ports = ports + [airflow_db_port] -%}
-  {%- endif -%}
-  {%- if airflow_web_server_port is defined and airflow_web_server_port -%}
-    {%- set ports = ports + [airflow_web_server_port] -%}
-  {%- endif -%}
-  {%- if i2b2_capture_db_port is defined and i2b2_capture_db_port -%}
-    {%- set ports = ports + [i2b2_capture_db_port] -%}
-  {%- endif -%}
-  {%- if i2b2_mip_db_port is defined and i2b2_mip_db_port -%}
-    {%- set ports = ports + [i2b2_mip_db_port] -%}
-  {%- endif -%}
-  {%- if data_catalog_db_port is defined and data_catalog_db_port -%}
-    {%- set ports = ports + [data_catalog_db_port] -%}
-  {%- endif -%}
-  {{ ports }}
-"
-
 data_factory_ports_public: []

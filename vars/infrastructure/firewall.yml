@@ -1,11 +1,3 @@
-firewall_host_ips: "
-{%- set ips = [] -%}
-{%- for host in groups['firewall'] -%}
-{%-   set ips = ips.append(hostvars[host]['ansible_default_ipv4']['address']) -%}
-{%- endfor -%}
-{{- ips -}}
-"
-
 firewall_public_ports: "{{
   data_factory_ports_public +
   hostpital_database_ports_public +
@@ -13,22 +5,3 @@ firewall_public_ports: "{{
   reference_ports_public +
   web_analytics_ports_public
 }}"
-
-firewall_container_exposed_ports: "{%- set exp_ports = [] -%}
-  {%- set exp_ports = exp_ports + [ '5432' ] -%}{#- airflow-database + data-catalog-database + dev-services-database + i2b2-capture-database + i2b2-mip-database + ldsm-database + meta-database + mipmap-database + portal-database + research-database + woken-database -#}
-  {%- set exp_ports = exp_ports + [ '22' ] -%}{#- cbrain-bourreau + cbrain-data-provider + gitlab -#}
-  {%- set exp_ports = exp_ports + [ '3306' ] -%}{#- cbrain-database -#}
-  {%- set exp_ports = exp_ports + [ '3000' ] -%}{#- cbrain-portal -#}
-  {%- set exp_ports = exp_ports + [ '5000' ] -%}{#- docker-registry + mesos-ui -#}
-  {%- set exp_ports = exp_ports + [ '8080' ] -%}{#- portal-backend -#}
-  {%- set exp_ports = exp_ports + [ '4089' ] -%}{#- portal-backend -#}
-  {%- set exp_ports = exp_ports + [ '5555' ] -%}{#- postgresraw-ui -#}
-  {%- set exp_ports = exp_ports + [ '9000' ] -%}{#- sonarqube -#}
-  {%- if woken_validation_akka_port is defined -%}
-  {%-   set exp_ports = exp_ports + [ woken_validation_akka_port ] -%}{#- woken-validation -#}
-  {%- endif -%}
-  {%- set exp_ports = exp_ports + [ '8087' ] -%}{#- woken -#}
-  {%- if woken_akka_port is defined -%}
-  {%-   set exp_ports = exp_ports + [ woken_akka_port ] -%}{#- woken -#}
-  {%- endif -%}
-{{- exp_ports -}}"
